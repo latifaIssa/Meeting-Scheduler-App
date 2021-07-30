@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_scheduler_app/data/meetings-info.dart';
 import 'package:meeting_scheduler_app/globals.dart';
+import 'package:meeting_scheduler_app/ui/widges/circle_avater_widget.dart';
 import 'package:meeting_scheduler_app/ui/widges/meeting_widget.dart';
 
 class MeetingsScreen extends StatelessWidget {
@@ -40,36 +41,24 @@ class MeetingsScreen extends StatelessWidget {
                     flex: 2,
                     child: Container(
                       margin: EdgeInsets.only(
-                        right: size.width * 0,
-                        top: size.width * 0.03,
+                        left: size.width * 0.05,
+                        bottom: size.height * 0.05,
                       ),
-                      child: CircleAvatar(
-                        radius: size.width * 0.07,
-                        // backgroundImage: AssetImage(
-                        //   Globals.globals.user.picture,
-                        // ),
-                        backgroundColor: Color(0xFF6f52ed),
-                        child: ClipOval(
-                          clipBehavior: Clip.antiAlias,
-                          child: Image(
-                            fit: BoxFit.cover,
-                            width: size.width * 0.14,
-                            image: AssetImage(
-                              Globals.globals.user.picture,
-                            ),
-                          ),
-                        ),
+                      child: CircleAvaterWidget(
+                        Globals.globals.user.picture,
                       ),
                     ),
                   )
                 ],
               ),
               Expanded(
-                flex: 5,
+                flex: size.width > 600 ? 1 : 5,
                 child: Container(
                   child: ListView.builder(
+                    scrollDirection:
+                        size.width > 600 ? Axis.horizontal : Axis.vertical,
                     itemCount: meetings.length,
-                    shrinkWrap: true,
+                    // shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return MeetingWidget(meetings[index]);
                       // return Container(

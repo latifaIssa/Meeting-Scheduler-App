@@ -6,6 +6,7 @@ import 'package:meeting_scheduler_app/helpers/sharedprefernces_helper.dart';
 import 'package:meeting_scheduler_app/models/user.dart';
 import 'package:meeting_scheduler_app/routing/router.dart';
 import 'package:meeting_scheduler_app/ui/screens/bottom_nav_bar.dart';
+import 'package:meeting_scheduler_app/ui/screens/home_screen.dart';
 
 class WelcomeWidget extends StatelessWidget {
   Random random = new Random();
@@ -68,7 +69,8 @@ class WelcomeWidget extends StatelessWidget {
                 picture: 'assets/images/${(random.nextInt(7) + 1)}.jfif',
               );
               SpHelper.spHelper.saveUser(user);
-              AppRouter.router.pushFunction(BottomNavBarWidget());
+              // AppRouter.router.pushFunction(BottomNavBarWidget());
+              AppRouter.router.pushFunction(HomeScreen());
             },
             child: Text(
               'Get started!',
