@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meeting_scheduler_app/data/meetings-info.dart';
@@ -26,7 +27,7 @@ class MeetingWidget extends StatelessWidget {
                   size.width > 600 ? size.width * 0.02 : size.width * 0.05,
             ),
             child: Text(
-              ' ${meeting.day}, ${meeting.date}',
+              ' ${DateFormat.E().format(meeting.from)}, ${DateFormat.d().format(meeting.from)}',
               style: TextStyle(
                 fontSize: 20,
                 color: Globals.globals.timeColor,
@@ -49,7 +50,7 @@ class MeetingWidget extends StatelessWidget {
                 vertical: size.height * 0.02,
                 horizontal: size.width * 0.02,
               ),
-              color: meeting.color,
+              color: meeting.background,
               elevation: 1,
               child: ListTile(
                 title: Container(
@@ -82,7 +83,7 @@ class MeetingWidget extends StatelessWidget {
                                 ? size.width * 0.01
                                 : size.height * 0.01),
                         child: Text(
-                          ' ${meeting.startTime} - ${meeting.startTime}',
+                          ' ${meeting.fromZone} - ${meeting.toZone}',
                           style: TextStyle(
                             fontSize: 15,
                             color: Globals.globals.timeColor,

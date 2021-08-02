@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:meeting_scheduler_app/ui/screens/calendar.dart';
 import 'package:meeting_scheduler_app/ui/screens/meetings_sceen.dart';
+import 'package:meeting_scheduler_app/ui/widges/_getAppointmentEditor.dart';
+import 'package:meeting_scheduler_app/ui/widges/add_meeting.dart';
 import 'package:meeting_scheduler_app/ui/widges/iconButtonWidget.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 
@@ -60,13 +63,22 @@ class _HomeScreenState extends State<HomeScreen>
             child: MeetingsScreen(),
           ),
           Center(
-            child: Text('Calendar Page'),
+            child: CalendarScreen(),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         //Floating action button on Scaffold
-        onPressed: () {
+        onPressed: () async {
+          // getAppointmentEditor();
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return AddMeeting();
+              },
+            ),
+          );
           //code to execute on button press
         },
         backgroundColor: Color(0xFF6f52ed),

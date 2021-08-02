@@ -51,23 +51,23 @@ class MeetingsScreen extends StatelessWidget {
                   )
                 ],
               ),
-              Expanded(
-                flex: size.width > 600 ? 1 : 5,
-                child: Container(
-                  child: ListView.builder(
-                    scrollDirection:
-                        size.width > 600 ? Axis.horizontal : Axis.vertical,
-                    itemCount: meetings.length,
-                    // shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return MeetingWidget(meetings[index]);
-                      // return Container(
-                      //   child: Text(meetings[index].title),
-                      // );
-                    },
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   flex: size.width > 600 ? 1 : 5,
+              //   child: Container(
+              //     child: ListView.builder(
+              //       scrollDirection:
+              //           size.width > 600 ? Axis.horizontal : Axis.vertical,
+              //       itemCount: meetings.length,
+              //       // shrinkWrap: true,
+              //       itemBuilder: (context, index) {
+              //         return MeetingWidget(meetings[index]);
+              //         // return Container(
+              //         //   child: Text(meetings[index].title),
+              //         // );
+              //       },
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

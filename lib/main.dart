@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:meeting_scheduler_app/helpers/db_helper.dart';
 import 'package:meeting_scheduler_app/routing/router.dart';
 import 'package:meeting_scheduler_app/ui/layout/narrow_layout.dart';
 import 'package:meeting_scheduler_app/ui/layout/wide_layout.dart';
@@ -13,7 +14,6 @@ void main() async {
   //Initialize library
   // WidgetsFlutterBinding.ensureInitialized();
   // await EasyLocalization.ensureInitialized();
-
   runApp(
     MyApp(),
     // EasyLocalization(

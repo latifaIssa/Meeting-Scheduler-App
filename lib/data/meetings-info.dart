@@ -22,106 +22,106 @@ Map<String, IconData> types = {
   'chatting': Icons.chat_bubble_outline,
   'calling': Icons.call,
 };
-List<Meeting> meetings = [
-  Meeting(
-    title: 'Design Review',
-    type: 'review',
-    invitedPeople: [
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-    ],
-    date: 'July 8',
-    day: 'Thursday',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    color: colors[0],
-    borderColor: colors[4],
-  ),
-  Meeting(
-    title: 'Project Palnning',
-    type: 'planning',
-    invitedPeople: [
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-    ],
-    // date: DateFormat.MMMMd().format(DateTime.now()),
-    // startTime: DateFormat.jm().format(DateTime.now()),
-    // endTime: DateFormat.jm().format(DateTime.now()),
-    date: 'July 9',
-    day: 'Thursday',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    color: colors[1],
-    borderColor: colors[5],
-  ),
-  Meeting(
-    title: 'Kickoff Meetings',
-    type: 'chatting',
-    invitedPeople: [
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-    ],
-    date: 'July 12',
-    day: 'Sunday',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    color: colors[2],
-    borderColor: colors[6],
-  ),
-  Meeting(
-    title: 'Setup call',
-    type: 'calling',
-    invitedPeople: [
-      User(
-        name: 'latifa',
-        email: 'latifa@masri',
-        picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
-      ),
-    ],
-    date: 'July 12',
-    day: 'Sunday',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    color: colors[3],
-    borderColor: colors[7],
-  ),
-];
+// List<Appointment> meetings = [
+//   Appointment(
+//     subject: 'Design Review',
+//     type: 'review',
+//     invitedPeople: [
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//     ],
+//     date: 'July 8',
+//     day: 'Thursday',
+//     startTime: DateTime(2021, 8, 1, 10),
+//     endTime: DateTime(2021, 8, 1, 11),
+//     color: colors[0],
+//     borderColor: colors[4],
+//   ),
+//   Appointment(
+//     subject: 'Project Palnning',
+//     type: 'planning',
+//     invitedPeople: [
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//     ],
+//     // date: DateFormat.MMMMd().format(DateTime.now()),
+//     // startTime: DateFormat.jm().format(DateTime.now()),
+//     // endTime: DateFormat.jm().format(DateTime.now()),
+//     date: 'July 9',
+//     day: 'Thursday',
+//     startTime: DateTime(2021, 8, 1, 11),
+//     endTime: DateTime(2021, 8, 1, 12),
+//     color: colors[1],
+//     borderColor: colors[5],
+//   ),
+//   Appointment(
+//     subject: 'Kickoff Meetings',
+//     type: 'chatting',
+//     invitedPeople: [
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//     ],
+//     date: 'July 12',
+//     day: 'Sunday',
+//     startTime: DateTime(2021, 8, 1, 1),
+//     endTime: DateTime(2021, 8, 1, 2),
+//     color: colors[2],
+//     borderColor: colors[6],
+//   ),
+//   Appointment(
+//     subject: 'Setup call',
+//     type: 'calling',
+//     invitedPeople: [
+//       User(
+//         name: 'latifa',
+//         email: 'latifa@masri',
+//         picture: 'assets/images/${(random.nextInt(6) + 1)}.jfif',
+//       ),
+//     ],
+//     date: 'July 12',
+//     day: 'Sunday',
+//     startTime: DateTime(2021, 8, 1, 3),
+//     endTime: DateTime(2021, 8, 1, 4),
+//     color: colors[3],
+//     borderColor: colors[7],
+//   ),
+// ];
