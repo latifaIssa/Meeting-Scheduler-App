@@ -11,6 +11,7 @@ import 'helpers/sharedprefernces_helper.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //when exist onther code to execute
   await SpHelper.spHelper.initSharedPrefernces();
+
   //Initialize library
   // WidgetsFlutterBinding.ensureInitialized();
   // await EasyLocalization.ensureInitialized();

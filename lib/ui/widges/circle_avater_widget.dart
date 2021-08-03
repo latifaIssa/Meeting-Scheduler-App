@@ -10,30 +10,27 @@ class CircleAvaterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Expanded(
-      flex: 2,
-      child: Container(
-        margin: EdgeInsets.only(
-          right: size.width * 0.01,
-          top: size.height * 0.03,
+    return Container(
+      margin: EdgeInsets.only(
+        right: size.width * 0.01,
+        top: size.height * 0.03,
+      ),
+      child: CircleAvatar(
+        radius: size.width > 600 ? size.height * 0.06 : size.width * 0.05,
+        backgroundImage: AssetImage(
+          pic,
         ),
-        child: CircleAvatar(
-          radius: size.width > 600 ? size.height * 0.06 : size.width * 0.05,
-          backgroundImage: AssetImage(
-            pic,
-          ),
-          backgroundColor: Color(0xFF6f52ed),
-          // child: ClipOval(
-          //   clipBehavior: Clip.antiAlias,
-          //   child: Image(
-          //     fit: BoxFit.cover,
-          //     width: size.width * 0.14,
-          //     image: AssetImage(
-          //       pic,
-          //     ),
-          //   ),
-          // ),
-        ),
+        backgroundColor: Color(0xFF6f52ed),
+        // child: ClipOval(
+        //   clipBehavior: Clip.antiAlias,
+        //   child: Image(
+        //     fit: BoxFit.cover,
+        //     width: size.width * 0.14,
+        //     image: AssetImage(
+        //       pic,
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }

@@ -27,7 +27,8 @@ class MeetingWidget extends StatelessWidget {
                   size.width > 600 ? size.width * 0.02 : size.width * 0.05,
             ),
             child: Text(
-              ' ${DateFormat.E().format(meeting.from)}, ${DateFormat.d().format(meeting.from)}',
+              // ' ${DateFormat.E().format(meeting.from)}, ${DateFormat.d().format(meeting.from)}',
+              '',
               style: TextStyle(
                 fontSize: 20,
                 color: Globals.globals.timeColor,
@@ -90,20 +91,20 @@ class MeetingWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: meeting.invitedPeople.length,
-                            itemBuilder: (context, index) {
-                              return CircleAvaterWidget(
-                                meeting.invitedPeople[index].picture,
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                      // Expanded(
+                      //   flex: 2,
+                      //   child: Container(
+                      //     child: ListView.builder(
+                      //       scrollDirection: Axis.horizontal,
+                      //       itemCount: meeting.invitedPeople.length,
+                      //       itemBuilder: (context, index) {
+                      //         return CircleAvaterWidget(
+                      //           meeting.invitedPeople[index].picture,
+                      //         );
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meeting_scheduler_app/helpers/db_helper.dart';
 import 'package:meeting_scheduler_app/ui/screens/calendar.dart';
 import 'package:meeting_scheduler_app/ui/screens/meetings_sceen.dart';
 import 'package:meeting_scheduler_app/ui/widges/_getAppointmentEditor.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  DatabaseHelper helper = DatabaseHelper();
   int index = 0;
   TabController tabController;
   // final List<TitledNavigationBarItem> items = [
@@ -75,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
             context,
             MaterialPageRoute(
               builder: (context) {
+                // helper.getTablesNames();
                 return AddMeeting();
               },
             ),

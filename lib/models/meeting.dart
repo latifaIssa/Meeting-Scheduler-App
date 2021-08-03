@@ -60,6 +60,7 @@ import 'package:meeting_scheduler_app/models/user.dart';
 
 class Meeting {
   Meeting({
+    this.id,
     @required this.from,
     @required this.to,
     this.title = '',
@@ -69,12 +70,13 @@ class Meeting {
     this.toZone = '',
     this.exceptionDates,
     this.recurrenceRule = '',
-    this.invitedPeople,
+    // this.invitedPeople,
     @required this.type,
     this.borderColor,
   });
-  DateTime from;
-  DateTime to;
+  int id;
+  String from;
+  String to;
   String title;
   bool isAllDay;
   Color background;
@@ -83,6 +85,44 @@ class Meeting {
   String recurrenceRule;
   List<DateTime> exceptionDates;
   String type;
-  List<User> invitedPeople;
+  // List<User> invitedPeople = [];
   Color borderColor;
+
+  // Convert a Note object into a Map object
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    if (id != null) {
+      map['id'] = id;
+    }
+    map['title'] = title;
+    map['from'] = from;
+    map['to'] = to;
+    map['isAllDay'] = isAllDay;
+    // map['isAllDay'] = isAllDay;
+    map['background'] = background;
+    map['fromZone'] = fromZone;
+    map['toZone'] = toZone;
+    map['exceptionDates'] = exceptionDates;
+    map['type'] = type;
+    // map['invitedPeople'] = invitedPeople;
+    map['borderColor'] = borderColor;
+
+    return map;
+  }
+
+  // Extract a Meeting object from a Map object
+  Meeting.fromMapObject(Map<String, dynamic> map) {
+    this.id = map['id'];
+    this.title = map['title'];
+    this.from = map['from'];
+    this.to = map['to'];
+    this.isAllDay = map['isAllDay'];
+    this.background = map['background'];
+    this.fromZone = map['fromZone'];
+    this.toZone = map['toZone'];
+    this.exceptionDates = map['exceptionDates'];
+    this.type = map['type'];
+    // this.invitedPeople = map['invitedPeople'];
+    this.borderColor = map['borderColor'];
+  }
 }

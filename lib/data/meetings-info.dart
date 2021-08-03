@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meeting_scheduler_app/helpers/db_helper.dart';
 import 'package:meeting_scheduler_app/models/meeting.dart';
 import 'package:meeting_scheduler_app/models/user.dart';
+import 'package:sqflite/sqflite.dart';
 
 Random random = new Random();
 List<Color> colors = [
@@ -22,6 +24,47 @@ Map<String, IconData> types = {
   'chatting': Icons.chat_bubble_outline,
   'calling': Icons.call,
 };
+
+List<Meeting> appointments = <Meeting>[
+  Meeting(
+    from: 'date',
+    // to: 'date'.add(const Duration(hours: 1)),
+    to: '',
+    title: 'General Meeting',
+    isAllDay: false,
+    background: Colors.red,
+    type: 'calling',
+    borderColor: colors[4],
+
+    // endTimeZone: '',
+    // startTimeZone: '',
+    // type: '',
+    // fromZone: '',
+    // toZone: '',
+    // recurrenceRule: '',
+    // exceptionDates: null, endTimeZone: ''
+  ),
+  Meeting(
+    from: 'date',
+    // to: 'date'.add(const Duration(hours: 1)),
+    to: '',
+    title: 'General Meeting',
+    isAllDay: false,
+    background: Colors.red,
+    type: 'planning',
+    borderColor: colors[5],
+    // endTimeZone: '',
+    // startTimeZone: '',
+    // type: '',
+    // fromZone: '',
+    // toZone: '',
+    // recurrenceRule: '',
+    // exceptionDates: null, endTimeZone: ''
+  ),
+];
+  
+   
+  
 // List<Appointment> meetings = [
 //   Appointment(
 //     subject: 'Design Review',

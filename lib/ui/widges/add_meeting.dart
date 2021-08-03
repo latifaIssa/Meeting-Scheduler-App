@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'package:intl/intl.dart';
 
 import 'package:date_format/date_format.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:meeting_scheduler_app/data/meetings-info.dart';
 import 'package:meeting_scheduler_app/globals.dart';
+import 'package:meeting_scheduler_app/helpers/db_helper.dart';
 import 'package:meeting_scheduler_app/models/meeting.dart';
+import 'package:meeting_scheduler_app/models/user.dart';
 import 'package:meeting_scheduler_app/ui/widges/TextFeildWidget.dart';
 import 'package:meeting_scheduler_app/ui/widges/color_picker.dart';
 
@@ -19,6 +22,7 @@ class AddMeeting extends StatefulWidget {
 }
 
 class _AddMeetingState extends State<AddMeeting> {
+  DatabaseHelper helper = DatabaseHelper();
   DateTime _selectedDate;
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -94,202 +98,255 @@ class _AddMeetingState extends State<AddMeeting> {
           vertical: 30,
           horizontal: 10,
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            ListTile(
-              // contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-              // leading: const Text(''),
-              title: TextField(
-                controller: titleController,
-                onChanged: (String value) {
-                  subject = value;
-                  meeting.title = titleController.text;
-                },
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400),
-                decoration: InputDecoration(
-                  // border: InputBorder.none,
-                  border: const OutlineInputBorder(),
-                  hintText: 'Add title',
+        child: Form(
+          child: ListView(
+            padding: const EdgeInsets.all(0),
+            children: [
+              ListTile(
+                // contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+                // leading: const Text(''),
+                title: TextFormField(
+                  controller: titleController,
+                  // onChanged: (String value) {
+                  //   subject = value;
+                  //   meeting.title = titleController.text;
+                  // },
+                  onSaved: (String value) {
+                    subject = value;
+                    meeting.title = titleController.text;
+                  },
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400),
+                  decoration: InputDecoration(
+                    // border: InputBorder.none,
+                    border: const OutlineInputBorder(),
+                    hintText: 'Add title',
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-              leading: Icon(
-                Icons.access_time,
-                color: Colors.black54,
+              ListTile(
+                contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                leading: Icon(
+                  Icons.access_time,
+                  color: Colors.black54,
+                ),
+                title: Row(
+                  children: <Widget>[
+                    const Expanded(
+                      child: Text('All-day'),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Switch(
+                          value: isAllDay,
+                          onChanged: (bool value) {
+                            setState(() {
+                              isAllDay = value;
+                              meeting.isAllDay = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              title: Row(
-                children: <Widget>[
-                  const Expanded(
-                    child: Text('All-day'),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Switch(
-                        value: isAllDay,
-                        onChanged: (bool value) {
+              ListTile(
+                contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          hintText: 'start date',
+                        ),
+                        controller: startDateController,
+                        onTap: () {
+                          _selectDate(context, true);
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            isAllDay = value;
-                            meeting.isAllDay = isAllDay;
+                            meeting.from = startDateController.text;
                           });
                         },
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: 'start date',
+                    Expanded(
+                        child: SizedBox(
+                      width: 2,
+                    )),
+                    Expanded(
+                      flex: 4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          hintText: 'end date',
+                        ),
+                        controller: endDateController,
+                        onTap: () {
+                          _selectDate(context, false);
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            meeting.to = startDateController.text;
+                          });
+                        },
                       ),
-                      controller: startDateController,
-                      onTap: () {
-                        _selectDate(context, true);
-                      },
-                      // onChanged: (value) {
-                      //   setState(() {
-                      //     meeting.from = startDateController.text;
-                      //   });
-                      // },
-                    ),
-                  ),
-                  Expanded(
-                      child: SizedBox(
-                    width: 2,
-                  )),
-                  Expanded(
-                    flex: 4,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: 'end date',
-                      ),
-                      controller: endDateController,
-                      onTap: () {
-                        _selectDate(context, false);
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            ListTile(
-              contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: 'start time',
-                      ),
-                      controller: startTimeController,
-                      onTap: () {
-                        _selectTime(context, true);
-                      },
-                    ),
-                  ),
-                  Expanded(
-                      child: SizedBox(
-                    width: 2,
-                  )),
-                  Expanded(
-                    flex: 4,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: 'end time',
-                      ),
-                      controller: endTimeController,
-                      onTap: () {
-                        _selectTime(context, false);
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: height * 0.05,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text('Meeting Type: '),
-                Container(
-                  width: width * 0.5,
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1.0, style: BorderStyle.solid),
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    ),
-                  ),
-                  alignment: Alignment.bottomCenter,
-                  child: DropdownButton(
-                    value: _value,
-                    selectedItemBuilder: (BuildContext context) {
-                      return typeNames.map<Widget>((String item) {
-                        return Text('$item');
-                      }).toList();
-                    },
-                    items: typeNames.map((String item) {
-                      return DropdownMenuItem<int>(
-                        child: Text('$item'),
-                        value: typeNames.indexOf(item),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _value = value;
-                        meeting.type = value;
-                      });
-                    },
-                    hint: Text("Select meeting type"),
-                    // isExpanded: true,
-                  ),
+                    )
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: height * 0.05,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: RaisedButton(
-                    elevation: 3.0,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          hintText: 'start time',
+                        ),
+                        controller: startTimeController,
+                        onTap: () {
+                          _selectTime(context, true);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                        child: SizedBox(
+                      width: 2,
+                    )),
+                    Expanded(
+                      flex: 4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          hintText: 'end time',
+                        ),
+                        controller: endTimeController,
+                        onTap: () {
+                          _selectTime(context, false);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: height * 0.05,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Meeting Type: '),
+                  Container(
+                    width: width * 0.5,
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(width: 1.0, style: BorderStyle.solid),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      ),
+                    ),
+                    alignment: Alignment.bottomCenter,
+                    child: DropdownButton(
+                      value: _value,
+                      selectedItemBuilder: (BuildContext context) {
+                        return typeNames.map<Widget>((String item) {
+                          return Text('$item');
+                        }).toList();
+                      },
+                      items: typeNames.map((String item) {
+                        return DropdownMenuItem<int>(
+                          child: Text('$item'),
+                          value: typeNames.indexOf(item),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _value = value;
+                          meeting.type = value;
+                        });
+                      },
+                      hint: Text("Select meeting type"),
+                      // isExpanded: true,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: height * 0.05,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: RaisedButton(
+                      elevation: 3.0,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                titlePadding: const EdgeInsets.all(0.0),
+                                contentPadding: const EdgeInsets.all(0.0),
+                                content: SingleChildScrollView(
+                                  child: ColorPicker(
+                                    pickerColor: currentColor,
+                                    onColorChanged: changeColor,
+                                    colorPickerWidth: 300.0,
+                                    pickerAreaHeightPercent: 0.7,
+                                    enableAlpha: true,
+                                    displayThumbColor: true,
+                                    showLabel: true,
+                                    paletteType: PaletteType.hsv,
+                                    pickerAreaBorderRadius:
+                                        const BorderRadius.only(
+                                      topLeft: const Radius.circular(2.0),
+                                      topRight: const Radius.circular(2.0),
+                                    ),
+                                  ),
+                                ));
+                          },
+                        );
+                      },
+                      child: const Text('select color'),
+                      color: currentColor,
+                      textColor: useWhiteForeground(currentColor)
+                          ? const Color(0xffffffff)
+                          : const Color(0xff000000),
+                    ),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: 2,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: RaisedButton(
+                      elevation: 3.0,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
                               titlePadding: const EdgeInsets.all(0.0),
                               contentPadding: const EdgeInsets.all(0.0),
                               content: SingleChildScrollView(
                                 child: ColorPicker(
-                                  pickerColor: currentColor,
-                                  onColorChanged: changeColor,
+                                  pickerColor: currentBorderColor,
+                                  onColorChanged: changeBorderColor,
                                   colorPickerWidth: 300.0,
                                   pickerAreaHeightPercent: 0.7,
                                   enableAlpha: true,
@@ -302,97 +359,56 @@ class _AddMeetingState extends State<AddMeeting> {
                                     topRight: const Radius.circular(2.0),
                                   ),
                                 ),
-                              ));
-                        },
-                      );
-                    },
-                    child: const Text('select color'),
-                    color: currentColor,
-                    textColor: useWhiteForeground(currentColor)
-                        ? const Color(0xffffffff)
-                        : const Color(0xff000000),
-                  ),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    width: 2,
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: RaisedButton(
-                    elevation: 3.0,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            titlePadding: const EdgeInsets.all(0.0),
-                            contentPadding: const EdgeInsets.all(0.0),
-                            content: SingleChildScrollView(
-                              child: ColorPicker(
-                                pickerColor: currentBorderColor,
-                                onColorChanged: changeBorderColor,
-                                colorPickerWidth: 300.0,
-                                pickerAreaHeightPercent: 0.7,
-                                enableAlpha: true,
-                                displayThumbColor: true,
-                                showLabel: true,
-                                paletteType: PaletteType.hsv,
-                                pickerAreaBorderRadius: const BorderRadius.only(
-                                  topLeft: const Radius.circular(2.0),
-                                  topRight: const Radius.circular(2.0),
-                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: const Text('select border color'),
-                    color: currentColor,
-                    textColor: useWhiteForeground(currentColor)
-                        ? const Color(0xffffffff)
-                        : const Color(0xff000000),
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('select border color'),
+                      color: currentColor,
+                      textColor: useWhiteForeground(currentColor)
+                          ? const Color(0xffffffff)
+                          : const Color(0xff000000),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height * 0.1,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                setState(() {
-                  // _save();
-                });
+                ],
+              ),
+              SizedBox(
+                height: height * 0.1,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    _save();
+                  });
 
-                // if (formKey.currentState.validate()) {
-                //   formKey.currentState.save();
-                //   FormUser formUser = FormUser.customer(
-                //     name: name,
-                //     emailAddress: emailAddress,
-                //     password: password,
-                //     phone: phone,
-                //   );
+                  // if (formKey.currentState.validate()) {
+                  //   formKey.currentState.save();
+                  //   FormUser formUser = FormUser.customer(
+                  //     name: name,
+                  //     emailAddress: emailAddress,
+                  //     password: password,
+                  //     phone: phone,
+                  //   );
 
-                // String result = await Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return HomePage(formUser);
-                //     },
-                //   ),
-                // );
-                // dynamic result =
-                //     Navigator.pushNamed(context, '/home', arguments: formUser);
+                  // String result = await Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) {
+                  //       return HomePage(formUser);
+                  //     },
+                  //   ),
+                  // );
+                  // dynamic result =
+                  //     Navigator.pushNamed(context, '/home', arguments: formUser);
 
-                // return result;
-                // print(result);
-                Navigator.pop(context);
-              },
-              child: Text('Add Meeting'),
-            ),
-          ],
+                  // return result;
+                  // print(result);
+                  // Navigator.pop(context);
+                },
+                child: Text('Add Meeting'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -429,7 +445,7 @@ class _AddMeetingState extends State<AddMeeting> {
                   isStart ? startDateController : endDateController.text.length,
               affinity: TextAffinity.upstream),
         );
-      isStart ? meeting.from = _selectedDate : meeting.to = _selectedDate;
+      // isStart ? meeting.from = _selectedDate : meeting.to = _selectedDate;
     }
   }
 
@@ -457,26 +473,34 @@ class _AddMeetingState extends State<AddMeeting> {
         },
       );
   }
-  // void _save() async {
-  //   moveToLastScreen();
 
-  //   // todo.date = DateFormat.yMMMd().format(DateTime.now());
-  //   // print(todo);
-  //   int result;
-  //   if (meeting.id != null) {
-  //     // Case 1: Update operation
-  //     result = await helper.updateTodo(todo);
-  //   } else {
-  //     // Case 2: Insert Operation
-  //     result = await helper.insertTodo(todo);
-  //   }
+  void _save() async {
+    Navigator.pop(context);
 
-  //   if (result != 0) {
-  //     // Success
-  //     _showAlertDialog('Status', 'Todo Saved Successfully');
-  //   } else {
-  //     // Failure
-  //     _showAlertDialog('Status', 'Problem Saving Todo');
-  //   }
-  // }
+    meeting.recurrenceRule = 'qqq';
+    meeting.exceptionDates = [DateTime(2000)];
+    meeting.background = currentColor;
+    meeting.borderColor = currentBorderColor;
+    meeting.title = titleController.text;
+    meeting.isAllDay = isAllDay;
+    // meeting.invitedPeople = [
+    //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),
+    //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),
+    //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),
+    //   User(name: 'Ahmed', email: 'ahmed@gmial.com')
+    // ];
+    print(meeting);
+    int result;
+    //  Insert Operation
+    result = await helper.insertMeeting(meeting);
+    if (result != 0) _showAlertDialog('Status', 'Meeting Saved Successfully');
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
+  }
 }
