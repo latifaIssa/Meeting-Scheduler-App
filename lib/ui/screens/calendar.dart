@@ -82,13 +82,13 @@ MeetingDataSource _getCalendarDataSource() {
   List<Meeting> appointments = <Meeting>[];
   appointments.add(
     Meeting(
-      from: 'date',
+      fromDate: 'date',
       // to: 'date'.add(const Duration(hours: 1)),
-      to: '',
-      title: 'General Meeting',
+      toDate: '',
+      eventTitle: 'General Meeting',
       isAllDay: false,
-      background: Colors.red,
-      type: '',
+      backgroundColor: Colors.red,
+      meetingType: '',
       // endTimeZone: '',
       // startTimeZone: '',
       // type: '',

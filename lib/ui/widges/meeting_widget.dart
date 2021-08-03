@@ -51,7 +51,7 @@ class MeetingWidget extends StatelessWidget {
                 vertical: size.height * 0.02,
                 horizontal: size.width * 0.02,
               ),
-              color: meeting.background,
+              color: meeting.backgroundColor,
               elevation: 1,
               child: ListTile(
                 title: Container(
@@ -70,7 +70,7 @@ class MeetingWidget extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(bottom: size.height * 0.018),
                         child: Text(
-                          meeting.title,
+                          meeting.eventTitle,
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class MeetingWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                   child: Icon(
-                    types[meeting.type],
+                    types[meeting.meetingType],
                     color: meeting.borderColor,
                     size: size.width * 0.06,
                   ),

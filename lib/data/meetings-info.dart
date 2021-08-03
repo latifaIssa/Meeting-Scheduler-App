@@ -27,13 +27,13 @@ Map<String, IconData> types = {
 
 List<Meeting> appointments = <Meeting>[
   Meeting(
-    from: 'date',
+    fromDate: 'date',
     // to: 'date'.add(const Duration(hours: 1)),
-    to: '',
-    title: 'General Meeting',
+    toDate: '',
+    eventTitle: 'General Meeting',
     isAllDay: false,
-    background: Colors.red,
-    type: 'calling',
+    backgroundColor: Colors.red,
+    meetingType: '',
     borderColor: colors[4],
 
     // endTimeZone: '',
@@ -45,13 +45,13 @@ List<Meeting> appointments = <Meeting>[
     // exceptionDates: null, endTimeZone: ''
   ),
   Meeting(
-    from: 'date',
+    fromDate: 'date',
     // to: 'date'.add(const Duration(hours: 1)),
-    to: '',
-    title: 'General Meeting',
+    toDate: '',
+    eventTitle: 'General Meeting',
     isAllDay: false,
-    background: Colors.red,
-    type: 'planning',
+    backgroundColor: Colors.red,
+    meetingType: '',
     borderColor: colors[5],
     // endTimeZone: '',
     // startTimeZone: '',

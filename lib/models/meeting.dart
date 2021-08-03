@@ -34,7 +34,7 @@ import 'package:meeting_scheduler_app/models/user.dart';
 //   Meeting({
 //     @required this.from,
 //     @required this.to,
-//     @required this.background = Colors.green,
+//     @required this.backgroundcolor = Colors.green,
 //     @required this.isAllDay = false,
 //     @required this.eventName = '',
 //     @required this.startTimeZone = '',
@@ -61,32 +61,34 @@ import 'package:meeting_scheduler_app/models/user.dart';
 class Meeting {
   Meeting({
     this.id,
-    @required this.from,
-    @required this.to,
-    this.title = '',
+    @required this.fromDate,
+    @required this.toDate,
+    this.eventTitle = '',
     this.isAllDay = false,
-    @required this.background,
+    @required this.backgroundColor,
     this.fromZone = '',
     this.toZone = '',
-    this.exceptionDates,
+    this.exceptionsDates,
     this.recurrenceRule = '',
-    // this.invitedPeople,
-    @required this.type,
+    this.invitedPeople,
+    @required this.meetingType,
     this.borderColor,
+    this.recurrencesRule,
   });
   int id;
-  String from;
-  String to;
-  String title;
+  String fromDate;
+  String toDate;
+  String eventTitle;
   bool isAllDay;
-  Color background;
+  Color backgroundColor;
   String fromZone;
   String toZone;
   String recurrenceRule;
-  List<DateTime> exceptionDates;
-  String type;
-  // List<User> invitedPeople = [];
+  List<DateTime> exceptionsDates;
+  String meetingType;
+  List<User> invitedPeople = [];
   Color borderColor;
+  String recurrencesRule;
 
   // Convert a Note object into a Map object
   Map<String, dynamic> toMap() {
@@ -94,35 +96,36 @@ class Meeting {
     if (id != null) {
       map['id'] = id;
     }
-    map['title'] = title;
-    map['from'] = from;
-    map['to'] = to;
+    map['eventTitle'] = eventTitle;
+    map['fromDate'] = fromDate;
+    map['toDate'] = toDate;
     map['isAllDay'] = isAllDay;
-    // map['isAllDay'] = isAllDay;
-    map['background'] = background;
+    map['backgroundColor'] = backgroundColor;
     map['fromZone'] = fromZone;
     map['toZone'] = toZone;
-    map['exceptionDates'] = exceptionDates;
-    map['type'] = type;
-    // map['invitedPeople'] = invitedPeople;
+    map['recurrencesRule'] = recurrencesRule;
+    map['exceptionsDates'] = exceptionsDates;
+    map['meetingType'] = meetingType;
+    map['invitedPeople'] = invitedPeople;
     map['borderColor'] = borderColor;
 
     return map;
   }
 
   // Extract a Meeting object from a Map object
-  Meeting.fromMapObject(Map<String, dynamic> map) {
-    this.id = map['id'];
-    this.title = map['title'];
-    this.from = map['from'];
-    this.to = map['to'];
-    this.isAllDay = map['isAllDay'];
-    this.background = map['background'];
-    this.fromZone = map['fromZone'];
-    this.toZone = map['toZone'];
-    this.exceptionDates = map['exceptionDates'];
-    this.type = map['type'];
-    // this.invitedPeople = map['invitedPeople'];
-    this.borderColor = map['borderColor'];
-  }
+  factory Meeting.fromMap(Map<String, dynamic> map) => Meeting(
+        id: map['id'],
+        eventTitle: map['eventtitle'],
+        fromDate: map['fromDate'],
+        toDate: map['toDate'],
+        isAllDay: map['isAllDay'],
+        backgroundColor: map['backgroundcolor'],
+        fromZone: map['fromZone'],
+        toZone: map['toZone'],
+        recurrencesRule: map['recurrencesRule'],
+        exceptionsDates: map['exceptionsDates'],
+        meetingType: map['meetingType'],
+        invitedPeople: map['invitedPeople'],
+        borderColor: map['borderColor'],
+      );
 }

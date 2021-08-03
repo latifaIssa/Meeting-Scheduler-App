@@ -55,7 +55,7 @@ class _AddMeetingState extends State<AddMeeting> {
 
   void changeColor(Color color) => setState(() {
         currentColor = color;
-        meeting.background = color;
+        meeting.backgroundColor = color;
       });
   void changeBorderColor(Color color) => setState(() {
         currentBorderColor = color;
@@ -113,7 +113,7 @@ class _AddMeetingState extends State<AddMeeting> {
                   // },
                   onSaved: (String value) {
                     subject = value;
-                    meeting.title = titleController.text;
+                    meeting.eventTitle = titleController.text;
                   },
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
@@ -174,7 +174,7 @@ class _AddMeetingState extends State<AddMeeting> {
                         },
                         onChanged: (value) {
                           setState(() {
-                            meeting.from = startDateController.text;
+                            meeting.fromDate = startDateController.text;
                           });
                         },
                       ),
@@ -196,7 +196,7 @@ class _AddMeetingState extends State<AddMeeting> {
                         },
                         onChanged: (value) {
                           setState(() {
-                            meeting.to = startDateController.text;
+                            meeting.toDate = startDateController.text;
                           });
                         },
                       ),
@@ -275,7 +275,7 @@ class _AddMeetingState extends State<AddMeeting> {
                       onChanged: (value) {
                         setState(() {
                           _value = value;
-                          meeting.type = value;
+                          meeting.meetingType = value;
                         });
                       },
                       hint: Text("Select meeting type"),
@@ -366,7 +366,7 @@ class _AddMeetingState extends State<AddMeeting> {
                       },
                       child: const Text('select border color'),
                       color: currentColor,
-                      textColor: useWhiteForeground(currentColor)
+                      textColor: useWhiteForeground(currentBorderColor)
                           ? const Color(0xffffffff)
                           : const Color(0xff000000),
                     ),
@@ -478,10 +478,10 @@ class _AddMeetingState extends State<AddMeeting> {
     Navigator.pop(context);
 
     meeting.recurrenceRule = 'qqq';
-    meeting.exceptionDates = [DateTime(2000)];
-    meeting.background = currentColor;
+    meeting.exceptionsDates = [DateTime(2000)];
+    meeting.backgroundColor = currentColor;
     meeting.borderColor = currentBorderColor;
-    meeting.title = titleController.text;
+    meeting.eventTitle = titleController.text;
     meeting.isAllDay = isAllDay;
     // meeting.invitedPeople = [
     //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),

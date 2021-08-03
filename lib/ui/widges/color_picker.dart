@@ -60,7 +60,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
       contentPadding: const EdgeInsets.all(0.0),
       content: SingleChildScrollView(
         child: ColorPicker(
-          pickerColor: widget.meeting.background,
+          pickerColor: widget.meeting.backgroundColor,
           onColorChanged: changeColor,
           colorPickerWidth: 300.0,
           pickerAreaHeightPercent: 0.7,

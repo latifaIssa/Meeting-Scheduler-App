@@ -15,25 +15,40 @@ class MeetingsScreen extends StatefulWidget {
 class _MeetingsScreenState extends State<MeetingsScreen> {
   DatabaseHelper databaseHelper = DatabaseHelper();
 
+  Future<List<Meeting>> newMeetings;
   List<Meeting> meetings;
+  // void updateListView() {
+  //   final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+  //   dbFuture.then((database) {
+  //     Future<List<Meeting>> MeetingListFuture = databaseHelper.getMeetingList();
+  //     MeetingListFuture.then((meetings) {
+  //       setState(() {
+  //         this.meetings = meetings;
+  //       });
+  //     });
+  //   });
+  // }
 
-  void updateListView() {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Meeting>> MeetingListFuture = databaseHelper.getMeetingList();
-      MeetingListFuture.then((meetings) {
-        setState(() {
-          this.meetings = meetings;
-        });
-      });
+  @override
+  void initState() {
+    // _alarmTime = DateTime.now();
+    databaseHelper.initializeDatabase().then((value) {
+      print('------database intialized');
+      loadAlarms();
     });
+    super.initState();
+  }
+
+  void loadAlarms() {
+    newMeetings = databaseHelper.getMeetingList();
+    if (mounted) setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     if (meetings == null) {
       meetings = List<Meeting>();
-      updateListView();
+      loadAlarms();
     }
     final Size size = MediaQuery.of(context).size;
     return Column(
