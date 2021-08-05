@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_scheduler_app/helpers/db_helper.dart';
+import 'package:meeting_scheduler_app/models/meeting.dart';
 import 'package:meeting_scheduler_app/ui/screens/calendar.dart';
 import 'package:meeting_scheduler_app/ui/screens/meetings_sceen.dart';
 import 'package:meeting_scheduler_app/ui/widges/_getAppointmentEditor.dart';
 import 'package:meeting_scheduler_app/ui/widges/add_meeting.dart';
 import 'package:meeting_scheduler_app/ui/widges/iconButtonWidget.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,19 +18,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  DatabaseHelper helper = DatabaseHelper();
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  Future<List<Meeting>> newMeetings;
+  List<Meeting> meetings = [];
+  Meeting meeting;
   int index = 0;
   TabController tabController;
-  // final List<TitledNavigationBarItem> items = [
-  //   TitledNavigationBarItem(
-  //     icon: Icons.grid_view_rounded,
-  //     title: Text(''),
-  //   ),
-  //   TitledNavigationBarItem(
-  //     icon: Icons.calendar_today_rounded,
-  //     title: Text(''),
-  //   ),
-  // ];
   final List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
       // title: Text('home'),
@@ -54,6 +49,35 @@ class _HomeScreenState extends State<HomeScreen>
     initTabController();
   }
 
+  void loadMeetings() {
+    newMeetings = databaseHelper.getMeetingList();
+    if (mounted) setState(() {});
+  }
+
+  void updateListView() async {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    dbFuture.then((database) {
+      Future<List<Meeting>> meetingListFuture = databaseHelper.getMeetingList();
+      meetingListFuture.then((meetingsList) {
+        setState(() {
+          this.meetings = meetingsList;
+          print(' count: ${this.meetings.length}');
+        });
+      });
+    });
+  }
+
+  void navigateToDetail(Meeting meeting) async {
+    bool result =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return AddMeeting();
+    }));
+
+    if (result == true) {
+      updateListView();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,10 +86,10 @@ class _HomeScreenState extends State<HomeScreen>
         physics: NeverScrollableScrollPhysics(),
         children: [
           Container(
-            child: MeetingsScreen(),
+            child: MeetingsScreen(meetings: meetings),
           ),
           Center(
-            child: CalendarScreen(),
+            child: CalendarScreen(meetings: meetings),
           ),
         ],
       ),
@@ -73,16 +97,16 @@ class _HomeScreenState extends State<HomeScreen>
         //Floating action button on Scaffold
         onPressed: () async {
           // getAppointmentEditor();
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                // helper.getTablesNames();
-                return AddMeeting();
-              },
-            ),
-          );
-          //code to execute on button press
+          // await Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       // helper.getTablesNames();
+          //       return navigateToDetail();
+          //     },
+          //   ),
+          // );
+          navigateToDetail(meeting);
         },
         backgroundColor: Color(0xFF6f52ed),
         child: Icon(Icons.add), //icon inside button

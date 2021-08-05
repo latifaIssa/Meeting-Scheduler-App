@@ -66,7 +66,7 @@ class WelcomeWidget extends StatelessWidget {
                 name: 'Latifa',
                 email: 'latifa@gmail.com',
                 password: '123',
-                picture: 'assets/images/${(random.nextInt(7) + 1)}.jfif',
+                picture: 'assets/images/${(random.nextInt(7))}.jfif',
               );
               SpHelper.spHelper.saveUser(user);
               // AppRouter.router.pushFunction(BottomNavBarWidget());

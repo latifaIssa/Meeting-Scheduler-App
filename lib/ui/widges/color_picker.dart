@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:meeting_scheduler_app/globals.dart';
 import 'package:meeting_scheduler_app/models/meeting.dart';
 
 class ColorPickerWidget extends StatefulWidget {
@@ -60,7 +61,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
       contentPadding: const EdgeInsets.all(0.0),
       content: SingleChildScrollView(
         child: ColorPicker(
-          pickerColor: widget.meeting.backgroundColor,
+          pickerColor: Globals.globals.colors[widget.meeting.backgroundColor],
           onColorChanged: changeColor,
           colorPickerWidth: 300.0,
           pickerAreaHeightPercent: 0.7,

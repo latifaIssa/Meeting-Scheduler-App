@@ -10,7 +10,7 @@ final String colMeetingId = "id";
 final String colEventName = "eventTitle";
 final String colFrom = "fromDate";
 final String colTo = "toDate";
-final String colIsAllDays = "isAllDays";
+final String colIsAllDays = "isAllDay";
 final String colBackgroundColor = "backgroundColor";
 final String colFromZone = "fromZone";
 final String colToZone = "toZone";
@@ -60,40 +60,19 @@ class DatabaseHelper {
           $colFrom text not null,
           $colTo text not null,
           $colIsAllDays integer,
-          $colBackgroundColor TEXT,
+          $colBackgroundColor integer,
           $colFromZone TEXT,
           $colToZone TEXT,
-          $colRecurrenceRule TEXT,
+          $colRecurrenceRule integer,
           $colExceptionDates TEXT,
           $colType TEXT,
-          $colInvitedPeople TEXT,
-          $colBorderColor TEXT)
+          $colBorderColor integer)
         ''');
       },
+      // $colInvitedPeople TEXT,
     );
     return database;
   }
-
-  // void _createDb(Database db, int newVersion) async {
-  //   var sql =
-  //       'CREATE TABLE $tableName ( $colMeetingId INTEGER PRIMARY KEY AUTOINCREMENT, '
-  //       '$colEventName TEXT, '
-  //       '$colFrom TEXT, '
-  //       '$colTo TEXT, '
-  //       '$colIsAllDays INTEGER, '
-  //       '$colBackgroundColor TEXT, '
-  //       '$colFromZone TEXT, '
-  //       '$colToZone TEXT, '
-  //       '$colRecurrenceRule TEXT, '
-  //       '$colExceptionDates TEXT, '
-  //       '$colType TEXT, '
-  //       '$colInvitedPeople TEXT, '
-  //       '$colBorderColor TEXT ) ';
-  //   await db.execute(sql);
-  //   // await db.execute(
-  //   //     'CREATE TABLE $todoTable($colMeetingId INTEGER primary key autoincrement, $colEventName TEXT, '
-  //   //         '$colFrom TEXT, $colTo TEXT, $colIsAllDays INTEGER  )');
-  // }
 
   // Fetch Operation: Get all meeting objects from database
   Future<List<Map<String, dynamic>>> getMeetingMapList() async {
@@ -105,27 +84,43 @@ class DatabaseHelper {
   }
 
   // Insert Operation: Insert a meeting object to database
-  Future<int> insertMeeting(Meeting meeting) async {
+  // Future<int> insertMeeting(Meeting meeting) async {
+  //   Database db = await this.database;
+  //   var result = await db.insert(tableName, meeting.toMap());
+  //   print(result);
+  //   return result;
+  // }
+
+  insertMeeting(Meeting meeting) async {
     Database db = await this.database;
-    var result = await db.insert(tableName, meeting.toMap());
-    return result;
+    int rowNum = await db.insert(tableName, meeting.toMap());
+    print(rowNum);
+  }
+
+  Future<List<Meeting>> getAllMeetings() async {
+    Database db = await this.database;
+    List<Map<String, Object>> results = await db.query(tableName);
+    List<Meeting> meetings = results.map((e) {
+      return Meeting.fromMap(e);
+    }).toList();
+    return meetings;
   }
 
   // Update Operation: Update a meeting object and save it to database
-  Future<int> updateMeeting(Meeting meeting) async {
-    var db = await this.database;
-    var result = await db.update(tableName, meeting.toMap(),
-        where: '$colMeetingId = ?', whereArgs: [meeting.id]);
-    return result;
-  }
+  // Future<int> updateMeeting(Meeting meeting) async {
+  //   var db = await this.database;
+  //   var result = await db.update(tableName, meeting.toMap(),
+  //       where: '$colMeetingId = ?', whereArgs: [meeting.id]);
+  //   return result;
+  // }
 
-  // Delete Operation: Delete a meeting object from database
-  Future<int> deleteMeeting(int id) async {
-    var db = await this.database;
-    int result =
-        await db.rawDelete('DELETE FROM $tableName WHERE $colMeetingId = $id');
-    return result;
-  }
+  // // Delete Operation: Delete a meeting object from database
+  // Future<int> deleteMeeting(int id) async {
+  //   var db = await this.database;
+  //   int result =
+  //       await db.rawDelete('DELETE FROM $tableName WHERE $colMeetingId = $id');
+  //   return result;
+  // }
 
   // Get number of meetings objects in database
   Future<int> getCount() async {
@@ -161,6 +156,15 @@ class DatabaseHelper {
 
     return _meetings;
   }
+
+  // Future<List<Meeting>> getAllMeetings() async {
+  //   var db = await this.database;
+  //   List<Map<String, Object>> results = await db.query(tableName);
+  //   List<Meeting> meetings = results.map((e) {
+  //     return Meeting.fromMap(e);
+  //   }).toList();
+  //   return meetings;
+  // }
 
   getTablesNames() async {
     List<Map<String, Object>> tables = await _database
