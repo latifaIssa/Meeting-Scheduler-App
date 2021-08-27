@@ -27,7 +27,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
     final Size size = MediaQuery.of(context).size;
     final double height = size.height;
     final double width = size.width;
-
+    final String today = Globals.globals.time(DateTime.now());
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -97,7 +97,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                                 : size.width * 0.05,
                           ),
                           child: Text(
-                            data[i].date,
+                            today == data[i].date ? 'Today' : data[i].date,
                             style: TextStyle(
                               fontSize: 20,
                               color: Globals.globals.timeColor,
