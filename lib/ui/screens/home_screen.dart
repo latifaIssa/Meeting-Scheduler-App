@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_scheduler_app/helpers/db_helper.dart';
 import 'package:meeting_scheduler_app/models/meeting.dart';
+import 'package:meeting_scheduler_app/services/route_helper.dart';
 import 'package:meeting_scheduler_app/ui/screens/calendar.dart';
 import 'package:meeting_scheduler_app/ui/screens/meetings_sceen.dart';
-import 'package:meeting_scheduler_app/ui/widges/_getAppointmentEditor.dart';
 import 'package:meeting_scheduler_app/ui/widges/add_meeting.dart';
 import 'package:meeting_scheduler_app/ui/widges/iconButtonWidget.dart';
 import 'package:sqflite/sqflite.dart';
@@ -18,9 +18,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  DatabaseHelper databaseHelper = DatabaseHelper();
+  // DatabaseHelper databaseHelper = DatabaseHelper();
   Future<List<Meeting>> newMeetings;
-  List<Meeting> meetings = [];
+  List<Meeting> meetings;
+  List<DateTime> dates;
   Meeting meeting;
   int index = 0;
   TabController tabController;
@@ -49,33 +50,15 @@ class _HomeScreenState extends State<HomeScreen>
     initTabController();
   }
 
-  void loadMeetings() {
-    newMeetings = databaseHelper.getMeetingList();
-    if (mounted) setState(() {});
-  }
-
-  void updateListView() async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Meeting>> meetingListFuture = databaseHelper.getMeetingList();
-      meetingListFuture.then((meetingsList) {
-        setState(() {
-          this.meetings = meetingsList;
-          print(' count: ${this.meetings.length}');
-        });
-      });
-    });
-  }
-
-  void navigateToDetail(Meeting meeting) async {
-    bool result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return AddMeeting();
-    }));
-
-    if (result == true) {
-      updateListView();
-    }
+  void navigateToDetail() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return AddMeeting();
+        },
+      ),
+    );
   }
 
   @override
@@ -85,28 +68,16 @@ class _HomeScreenState extends State<HomeScreen>
         controller: tabController,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          Container(
-            child: MeetingsScreen(meetings: meetings),
-          ),
+          MeetingsScreen(),
           Center(
-            child: CalendarScreen(meetings: meetings),
+            child: CalendarScreen(),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         //Floating action button on Scaffold
         onPressed: () async {
-          // getAppointmentEditor();
-          // await Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) {
-          //       // helper.getTablesNames();
-          //       return navigateToDetail();
-          //     },
-          //   ),
-          // );
-          navigateToDetail(meeting);
+          RouteHelper.routeHelper.goToPage(AddMeeting.routeName);
         },
         backgroundColor: Color(0xFF6f52ed),
         child: Icon(Icons.add), //icon inside button
@@ -118,23 +89,6 @@ class _HomeScreenState extends State<HomeScreen>
 
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(), //shape of notch
-        // shape: AutomaticNotchedShape(
-        //   RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.only(
-        //       topLeft: Radius.circular(50),
-        //       topRight: Radius.circular(50),
-        //     ),
-        //   ),
-        //   RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.all(
-        //       Radius.circular(50),
-        //     ),
-        //   ),
-        // ),
-        // child: SizedBox(
-        //   width: double.infinity,
-        //   height: 60,
-        // ),
         notchMargin: 10,
         clipBehavior: Clip.antiAlias,
         //notche margin between floating button and bottom appbar
@@ -150,29 +104,6 @@ class _HomeScreenState extends State<HomeScreen>
           items: items,
         ),
       ),
-
-      // bottomNavigationBar: TitledBottomNavigationBar(
-      //   onTap: (index) => print("Selected Index: $index"),
-      //   // Switch(
-      //   //     value: navBarMode,
-      //   //     onChanged: (v) {
-      //   //       setState(() => navBarMode = v);
-      //   //     },
-      //   //   ),
-      //   // onTap: (tapedIndex) {
-      //   //   // this.index = tapedIndex;
-
-      //   //   tabController.animateTo(tapedIndex);
-      //   //   // setState(() {});
-      //   // },
-      //   currentIndex: 0,
-      //   reverse: navBarMode,
-      //   curve: Curves.easeInBack,
-      //   items: items,
-      //   activeColor: Color(0xFF6f52ed),
-      //   inactiveColor: Color(0xFF6f52ed).withOpacity(0.6),
-      //   indicatorColor: Color(0xFF6f52ed),
-      // ),
     );
   }
 }

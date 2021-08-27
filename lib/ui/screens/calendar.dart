@@ -6,6 +6,8 @@ import 'package:meeting_scheduler_app/globals.dart';
 import 'package:meeting_scheduler_app/helpers/db_helper.dart';
 import 'package:meeting_scheduler_app/models/data_source.dart';
 import 'package:meeting_scheduler_app/models/meeting.dart';
+import 'package:meeting_scheduler_app/providers/meeting_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -18,43 +20,20 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  DateTime _minDate, _maxDate, _firstDate, _lastDate;
-  final CalendarController _calendarController = CalendarController();
-  DatabaseHelper databaseHelper = DatabaseHelper();
-  Future<List<Meeting>> newMeetings;
-  List<Meeting> meetings, meetingsList;
-
   @override
   void initState() {
     super.initState();
-  }
-
-  void updateListView() {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Meeting>> meetingListFuture = databaseHelper.getAllMeetings();
-      Future<List<Meeting>> newMeetings = databaseHelper.getAllMeetings();
-      meetingListFuture.then((meetingsList) {
-        setState(() {
-          this.meetings = meetingsList;
-          // print(this.meetings.length)
-          print(' count from update: ${meetingsList.length}');
-        });
-      });
-    });
+    Provider.of<MeetingProvider>(context, listen: false).getAllMeetings();
   }
 
   @override
   Widget build(BuildContext context) {
-    updateListView();
     return Scaffold(
       body: SafeArea(
         child: SfCalendar(
           view: CalendarView.day,
           showNavigationArrow: true,
           headerStyle: CalendarHeaderStyle(textAlign: TextAlign.center),
-          // dayViewSettings: DayViewSettings(numberOfWeeksInView: 3),
-
           headerHeight: 60,
           viewHeaderStyle: ViewHeaderStyle(
             dateTextStyle: TextStyle(
@@ -67,7 +46,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
           headerDateFormat: 'd,MMM',
-          dataSource: _getCalendarDataSource(meetings),
+          dataSource: _getCalendarDataSource(
+              Provider.of<MeetingProvider>(context, listen: false).meetings),
         ),
       ),
     );

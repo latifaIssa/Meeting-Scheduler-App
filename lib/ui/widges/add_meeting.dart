@@ -10,15 +10,16 @@ import 'package:meeting_scheduler_app/models/meeting.dart';
 import 'package:meeting_scheduler_app/models/user.dart';
 import 'dart:math';
 
+import 'package:meeting_scheduler_app/providers/meeting_provider.dart';
+import 'package:provider/provider.dart';
+
 class AddMeeting extends StatefulWidget {
-  // AddMeeting(meeting);
+  static final String routeName = 'addMeeting';
   @override
   _AddMeetingState createState() => _AddMeetingState();
 }
 
 class _AddMeetingState extends State<AddMeeting> {
-  DatabaseHelper helper = DatabaseHelper();
-  // AlarmHelper _alarmHelper = AlarmHelper();
   DateTime _selectedDate;
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -29,15 +30,23 @@ class _AddMeetingState extends State<AddMeeting> {
   Meeting meeting;
 
 // TextEditingController subject = TextEditingController();
-  String subject;
+  String subject = 'New Meeting';
   bool isAllDay = false;
   DateTime selectedStartDate = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
   String selectedStartTime = Globals.globals.time(DateTime.now());
   String selectedEndTime = Globals.globals.time(DateTime.now());
-  String type;
-  int _startHour, _startMinute, _startday, _startyear, _startMonth;
-  int _endHour, _endMinute, _endday, _endyear, _endMonth;
+  String type = 'Planning';
+  int _startHour = DateTime.now().hour,
+      _startMinute = DateTime.now().minute,
+      _startday = DateTime.now().day,
+      _startyear = DateTime.now().year,
+      _startMonth = DateTime.now().month;
+  int _endHour = DateTime.now().hour,
+      _endMinute = DateTime.now().minute,
+      _endday = DateTime.now().day,
+      _endyear = DateTime.now().year,
+      _endMonth = DateTime.now().month;
 
   String dateTime;
   DateTime selectedDate = DateTime.now();
@@ -96,14 +105,8 @@ class _AddMeetingState extends State<AddMeeting> {
             padding: const EdgeInsets.all(0),
             children: [
               ListTile(
-                // contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                // leading: const Text(''),
                 title: TextFormField(
                   controller: titleController,
-                  // onChanged: (String value) {
-                  //   subject = value;
-                  //   meeting.title = titleController.text;
-                  // },
                   onChanged: (String value) {
                     setState(() {
                       subject = value;
@@ -200,12 +203,7 @@ class _AddMeetingState extends State<AddMeeting> {
                           _selectDate(context, false);
                         },
                         onChanged: (value) {
-                          setState(() {
-                            // meeting.toDate = startDateController.text;
-                            // if (meeting.toDate == null)
-                            //   _showAlertDialog(
-                            //       'Status', 'Meeting end date not updated');
-                          });
+                          setState(() {});
                         },
                       ),
                     )
@@ -229,12 +227,6 @@ class _AddMeetingState extends State<AddMeeting> {
                           _selectTime(context, true);
                         },
                       ),
-                      // child: TimePickerWidget(
-                      //   meeting: meeting,
-                      //   newTime: _meetingEndTime,
-                      //   newTimeString: _meetingEndTimeString,
-                      //   isStart: true,
-                      // ),
                     ),
                     Expanded(
                         child: SizedBox(
@@ -548,39 +540,22 @@ class _AddMeetingState extends State<AddMeeting> {
       recurrencesRule: 1,
       exceptionsDates: DateTime(2000),
       borderColor: colorIndex + 4,
-      // invitedPeople: [
-      //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),
-      //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),
-      //   User(name: 'Ahmed', email: 'ahmed@gmial.com'),
-      //   User(name: 'Ahmed', email: 'ahmed@gmial.com')
-      // ],
     );
     print(' title ${meetingInfo.eventTitle} from $subject');
     print(' title ${meetingInfo.fromDate} from $selectedStartDate');
     print(' title ${meetingInfo.toDate} from $selectedEndDate');
     print(' isAllDay ${meetingInfo.isAllDay} from $isAllDay');
-    // meeting.setRecurrenceRule = 1;
-    // meeting.exceptionsDates = DateTime(2000);
-    // meeting.backgroundColor = colorIndex;
-    // meeting.borderColor = colorIndex + 3;
-    // meeting.setEventTitle = subject;
-    // meeting.isAllDay = false;
-    // meeting.fromDate = selectedStartDate;
-    // meeting.toDate = selectedEndDate;
-    // meeting.fromZone = selectedStartTime;
-    // meeting.toZone = selectedEndTime;
-    // meeting.meetingType = 'planning';
-    // print(meeting.title);
-
-    int result = await helper.insertMeeting(meetingInfo);
-    if (result != 0) _showAlertDialog('Status', 'Meeting Saved Successfully');
+    Provider.of<MeetingProvider>(context, listen: false)
+        .addMeeting(meetingInfo);
+    // if (result != 0) _showAlertDialog('Status', 'Meeting Saved Successfully');
+    // Provider.of<MeetingProvider>(context, listen: false).getAllMeetings();
   }
 
-  void _showAlertDialog(String title, String message) {
-    AlertDialog alertDialog = AlertDialog(
-      title: Text(title),
-      content: Text(message),
-    );
-    showDialog(context: context, builder: (_) => alertDialog);
-  }
+  // void _showAlertDialog(String title, String message) {
+  //   AlertDialog alertDialog = AlertDialog(
+  //     title: Text(title),
+  //     content: Text(message),
+  //   );
+  //   showDialog(context: context, builder: (_) => alertDialog);
+  // }
 }

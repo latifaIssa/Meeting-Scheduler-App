@@ -1,59 +1,41 @@
-import 'package:meeting_scheduler_app/models/meeting.dart';
-import 'package:sqflite/sqflite.dart';
-import 'dart:async';
 import 'dart:io';
+
+import 'package:meeting_scheduler_app/models/meeting.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqlite_api.dart';
+import 'package:path/path.dart';
 
-final String databaseName = "meeting.db";
-final String tableName = "meetings_table";
-final String colMeetingId = "id";
-final String colEventName = "eventTitle";
-final String colFrom = "fromDate";
-final String colTo = "toDate";
-final String colIsAllDays = "isAllDay";
-final String colBackgroundColor = "backgroundColor";
-final String colFromZone = "fromZone";
-final String colToZone = "toZone";
-final String colRecurrenceRule = "recurrencesRule";
-final String colExceptionDates = "exceptionsDates";
-final String colType = "meetingType";
-final String colInvitedPeople = "invitedPeople";
-final String colBorderColor = "borderColor";
+class DbHelper {
+  DbHelper._();
+  static DbHelper dbHelper = DbHelper._();
+  static final String databaseName = "meeting.db";
+  static final String tableName = "meetings_table";
+  static final String colMeetingId = "id";
+  static final String colEventName = "eventTitle";
+  static final String colFrom = "fromDate";
+  static final String colTo = "toDate";
+  static final String colIsAllDays = "isAllDay";
+  static final String colBackgroundColor = "backgroundColor";
+  static final String colFromZone = "fromZone";
+  static final String colToZone = "toZone";
+  static final String colRecurrenceRule = "recurrencesRule";
+  static final String colExceptionDates = "exceptionsDates";
+  static final String colType = "meetingType";
+  static final String colInvitedPeople = "invitedPeople";
+  static final String colBorderColor = "borderColor";
 
-class DatabaseHelper {
-  static DatabaseHelper _databaseHelper; // Singleton DatabaseHelper
-  static Database _database; // Singleton Database
-
-  DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
-
-  factory DatabaseHelper() {
-    if (_databaseHelper == null) {
-      _databaseHelper = DatabaseHelper
-          ._createInstance(); // This is executed only once, singleton object
-    }
-    return _databaseHelper;
+  Database database;
+  initDatabase() async {
+    database = await createConnection();
   }
 
-  Future<Database> get database async {
-    if (_database == null) {
-      _database = await initializeDatabase();
-    }
-    return _database;
-  }
+  Future<Database> createConnection() async {
+    Directory directory = await getApplicationDocumentsDirectory();
 
-  Future<Database> initializeDatabase() async {
-    // Get the directory path for both Android and iOS to store database.
-    // Directory directory = await getApplicationDocumentsDirectory();
-    var dir = await getDatabasesPath();
-    var path = dir + "meeting.db";
-    // String path = dir.path + 'meeting.db';
-
-    // Open/create the database at a given path
-    var database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) {
-        db.execute('''
+    Database database = await openDatabase(join(directory.path, databaseName),
+        version: 1, onCreate: (db, version) {
+      db.execute('''
           create table $tableName ( 
           $colMeetingId integer primary key autoincrement, 
           $colEventName text not null,
@@ -68,108 +50,27 @@ class DatabaseHelper {
           $colType TEXT,
           $colBorderColor integer)
         ''');
-      },
-      // $colInvitedPeople TEXT,
-    );
+    });
     return database;
   }
 
-  // Fetch Operation: Get all meeting objects from database
-  Future<List<Map<String, dynamic>>> getMeetingMapList() async {
-    Database db = await this.database;
-// , orderBy: '$colFrom ASC'
-//		var result = await db.rawQuery('SELECT * FROM $meetingTable order by $colTitle ASC');
-    var result = await db.query(tableName);
-    return result;
-  }
-
-  // Insert Operation: Insert a meeting object to database
-  // Future<int> insertMeeting(Meeting meeting) async {
-  //   Database db = await this.database;
-  //   var result = await db.insert(tableName, meeting.toMap());
-  //   print(result);
-  //   return result;
-  // }
-
-  insertMeeting(Meeting meeting) async {
-    Database db = await this.database;
-    int rowNum = await db.insert(tableName, meeting.toMap());
-    print(rowNum);
+  Future<int> insertMeeting(Meeting meeting) async {
+    try {
+      int rowNum = await database.insert(tableName, meeting.toMap());
+      print(rowNum);
+      return rowNum;
+    } on Exception catch (e) {
+      return null;
+    }
   }
 
   Future<List<Meeting>> getAllMeetings() async {
-    Database db = await this.database;
-    List<Map<String, Object>> results = await db.query(tableName);
-    List<Meeting> meetings = results.map((e) {
-      return Meeting.fromMap(e);
-    }).toList();
-    return meetings;
-  }
-
-  // Update Operation: Update a meeting object and save it to database
-  // Future<int> updateMeeting(Meeting meeting) async {
-  //   var db = await this.database;
-  //   var result = await db.update(tableName, meeting.toMap(),
-  //       where: '$colMeetingId = ?', whereArgs: [meeting.id]);
-  //   return result;
-  // }
-
-  // // Delete Operation: Delete a meeting object from database
-  // Future<int> deleteMeeting(int id) async {
-  //   var db = await this.database;
-  //   int result =
-  //       await db.rawDelete('DELETE FROM $tableName WHERE $colMeetingId = $id');
-  //   return result;
-  // }
-
-  // Get number of meetings objects in database
-  Future<int> getCount() async {
-    Database db = await this.database;
-    List<Map<String, dynamic>> x =
-        await db.rawQuery('SELECT COUNT (*) FROM $tableName');
-    int result = Sqflite.firstIntValue(x);
-    return result;
-  }
-
-  // Get the 'Map List' [ List<Map> ] and convert it to 'Meetings List' [ List<Meeting> ]
-  Future<List<Meeting>> getMeetingList() async {
-//     var meetingMapList =
-//         await getMeetingMapList(); // Get 'Map List' from database
-//     int count =
-//         meetingMapList.length; // Count the number of map entries in db table
-// var db = await this.database;
-//     List<Meeting> meetingList = List<Meeting>();
-//     // For loop to create a 'meeting List' from a 'Map List'
-//     for (int i = 0; i < count; i++) {
-//       meetingList.add(Meeting.fromMapObject(meetingMapList[i]));
-//     }
-
-//     return meetingList;
-    List<Meeting> _meetings = [];
-
-    var db = await this.database;
-    var result = await db.query(tableName);
-    result.forEach((element) {
-      var meetingsInfo = Meeting.fromMap(element);
-      _meetings.add(meetingsInfo);
-    });
-
-    return _meetings;
-  }
-
-  // Future<List<Meeting>> getAllMeetings() async {
-  //   var db = await this.database;
-  //   List<Map<String, Object>> results = await db.query(tableName);
-  //   List<Meeting> meetings = results.map((e) {
-  //     return Meeting.fromMap(e);
-  //   }).toList();
-  //   return meetings;
-  // }
-
-  getTablesNames() async {
-    List<Map<String, Object>> tables = await _database
-        .query('sqlite_master', where: 'type=?', whereArgs: ['table']);
-    List<String> tablesNames = tables.map((e) => e['name'].toString()).toList();
-    print(tablesNames);
+    try {
+      List<Map<String, dynamic>> results = await database.query(tableName);
+      List<Meeting> meetings = results.map((e) => Meeting.fromMap(e)).toList();
+      return meetings;
+    } on Exception catch (e) {
+      return null;
+    }
   }
 }
